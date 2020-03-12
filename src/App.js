@@ -5,38 +5,39 @@ import Users from './components/users/Users';
 
 class App extends React.Component {
 
-
   state = {
-    users: []
+    users: [], 
+    loading: false
   }
 
   componentDidMount() {
-    fetch('https://api.github.com/users')
+    fetch(`https://api.github.com/users?client_id=
+    ${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=
+    ${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`)
     .then(rsp => rsp.json())
     .then(data => {
       this.setState({
-        users: data
+        users: data,
+        loading: false
       })
     })
   }
 
 render() {
-console.log(this.state.users)
-const { users } =  this.state
+
+  const { users } =  this.state
   return (
     <div className="App">
       <NavBar title="GitHub" icon='fab fa-github'/>
       <div className="container">
-       <Users users={users} />
+       <Users loading= {this.state.loading} users={users} />
       </div>
     
     </div>
     
   );
 
-
-  }
-
+}
 
 }
 
