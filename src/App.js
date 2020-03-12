@@ -1,26 +1,43 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import NavBar from './components/layout/NavBar';
+import Users from './components/users/Users';
 
-function App() {
+class App extends React.Component {
+
+
+  state = {
+    users: []
+  }
+
+  componentDidMount() {
+    fetch('https://api.github.com/users')
+    .then(rsp => rsp.json())
+    .then(data => {
+      this.setState({
+        users: data
+      })
+    })
+  }
+
+render() {
+console.log(this.state.users)
+const { users } =  this.state
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NavBar title="GitHub" icon='fab fa-github'/>
+      <div className="container">
+       <Users users={users} />
+      </div>
+    
     </div>
+    
   );
+
+
+  }
+
+
 }
 
 export default App;
