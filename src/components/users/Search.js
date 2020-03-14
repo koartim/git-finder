@@ -22,6 +22,7 @@ class Search extends React.Component {
  
 
     render() {
+        console.log(this.props.searchUsers)
         return(
             <div>
                 <form onSubmit={this.onSubmit} className="form">
