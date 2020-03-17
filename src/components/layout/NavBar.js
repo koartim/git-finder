@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const NavBar = (props) => {
 
@@ -10,6 +11,17 @@ const NavBar = (props) => {
                 <h1>
                     <i className= {icon}></i> {title} Finder
                 </h1>
+                <ul>
+                    <li>
+                        <Link to="/">Home</Link>
+                    </li>
+                    <li>
+                        <Link to="/about">About</Link>
+                    </li>
+                    <li>
+                        <Link to="/disclaimer">Disclaimer</Link>
+                    </li>
+                </ul>
             </nav>
         )
 }

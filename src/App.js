@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 import NavBar from './components/layout/NavBar';
 import Users from './components/users/Users';
 import Search from './components/users/Search';
 import axios from 'axios';
 import Alert from './components/layout/Alert';
+import About from './components/pages/About'
+import Disclaimer from './components/pages/Disclaimer';
 
 class App extends React.Component {
 
   state = {
     users: [], 
-    loading: false
+    loading: false,
+    alert: null
   }
 
   async componentDidMount() {
@@ -21,8 +25,7 @@ class App extends React.Component {
     .then(data => {
       this.setState({
         users: data,
-        loading: false,
-        alert: null
+        loading: false
       })
     })
   }
@@ -52,24 +55,33 @@ class App extends React.Component {
 render() {
   const { loading, users } = this.state
   return (
+    <Router>
     <div className="App">
       <NavBar title="GitHub" icon='fab fa-github'/>
       <div className="container">
       <Alert alert={this.state.alert}/>
-      <Search 
-          searchUsers={this.searchUsers} 
-          clearUsers={this.clearUsers} 
-          showClear={users.length > 0 ? true : false}
-          setAlert={this.setAlert}
+      <Switch>
+        <Route exact path="/" render={props => (
+          <Fragment>
+            <Search 
+              searchUsers={this.searchUsers} 
+              clearUsers={this.clearUsers} 
+              showClear={users.length > 0 ? true : false}
+              setAlert={this.setAlert}
            />
        <Users loading= {loading} users={users} />
+          </Fragment>
+        )}
+        />
+        <Route exact path='/about' component={About} />
+        <Route exact path='/disclaimer' render={routeProps => <Disclaimer {...routeProps} />} />  
+      </Switch>
       </div>
     </div>
+    </Router>
     
   );
-
-}
-
+ }
 }
 
 export default App;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 
 class Search extends React.Component {
@@ -22,22 +22,15 @@ class Search extends React.Component {
 
     onSubmit = (e) => {
         e.preventDefault()
-        // if the user attempts to submit an empty search
         if (this.state.text === '') {
-            // we call the alert function passed down from app which accepts a message and a type
             this.props.setAlert('Please enter something', 'light')
         } else {
-            // if the form is submitted with appropriate text, we simply call searchUsers
             this.props.searchUsers(this.state.text)
         this.setState({
             text: ''
         })
-        }
-        
+        }   
     }
-
-
- 
 
     render() {
         const {showClear, clearUsers} = this.props
@@ -50,7 +43,6 @@ class Search extends React.Component {
                 {showClear && (
                    <button class="btn btn-light btn-block" onClick={clearUsers}>Clear</button>     
                 )}
-                
             </div>
         )
     }
