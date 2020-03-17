@@ -10,7 +10,8 @@ class Search extends React.Component {
     static propTypes = {
         searchUsers: PropTypes.func.isRequired,
         clearUsers: PropTypes.func.isRequired,
-        showClear: PropTypes.func.isRequired
+        showClear: PropTypes.bool.isRequired,
+        setAlert: PropTypes.func.isRequired
     }
 
     onChange = (e) => {
@@ -21,10 +22,18 @@ class Search extends React.Component {
 
     onSubmit = (e) => {
         e.preventDefault()
-        this.props.searchUsers(this.state.text)
+        // if the user attempts to submit an empty search
+        if (this.state.text === '') {
+            // we call the alert function passed down from app which accepts a message and a type
+            this.props.setAlert('Please enter something', 'light')
+        } else {
+            // if the form is submitted with appropriate text, we simply call searchUsers
+            this.props.searchUsers(this.state.text)
         this.setState({
             text: ''
         })
+        }
+        
     }
 
 

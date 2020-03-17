@@ -4,6 +4,7 @@ import NavBar from './components/layout/NavBar';
 import Users from './components/users/Users';
 import Search from './components/users/Search';
 import axios from 'axios';
+import Alert from './components/layout/Alert';
 
 class App extends React.Component {
 
@@ -20,7 +21,8 @@ class App extends React.Component {
     .then(data => {
       this.setState({
         users: data,
-        loading: false
+        loading: false,
+        alert: null
       })
     })
   }
@@ -42,13 +44,24 @@ class App extends React.Component {
     })
   }
 
+  setAlert = (msg, type) => {
+    this.setState({ alert: { msg: msg, type: type } });
+    setTimeout(() => this.setState({alert: null}), 3000)
+  }
+
 render() {
   const { loading, users } = this.state
   return (
     <div className="App">
       <NavBar title="GitHub" icon='fab fa-github'/>
       <div className="container">
-      <Search searchUsers={this.searchUsers} clearUsers={this.clearUsers} showClear={users.length > 0 ? true : false} />
+      <Alert alert={this.state.alert}/>
+      <Search 
+          searchUsers={this.searchUsers} 
+          clearUsers={this.clearUsers} 
+          showClear={users.length > 0 ? true : false}
+          setAlert={this.setAlert}
+           />
        <Users loading= {loading} users={users} />
       </div>
     </div>
