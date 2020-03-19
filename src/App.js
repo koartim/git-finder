@@ -15,6 +15,7 @@ class App extends React.Component {
   state = {
     users: [], 
     user: {},
+    repos: [],
     loading: false,
     alert: null
   }
@@ -50,6 +51,30 @@ class App extends React.Component {
       this.setState({user: rsp.data, loading: false})
   }
 
+  // getUserRepos = async username => {
+  //   this.setState({loading: true})
+  //   const rsp = await axios.get(`https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=
+  //   ${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=
+  //   ${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`)
+  //   this.setState({repos: rsp.data, loading: false })
+  // }
+
+  getUserRepos = async username => {
+    this.setState({loading: true})
+   await fetch(`https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=
+    ${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=
+    ${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`)
+    .then(rsp => rsp.json())
+    .then(data => {
+      this.setState({
+        repos: data,
+        loading: false
+      })
+    })
+    .catch(console.error()
+    )
+  }
+
   clearUsers = () => {
     this.setState({
       users: [],
@@ -63,7 +88,8 @@ class App extends React.Component {
   }
 
 render() {
-  const { loading, users, user } = this.state
+
+  const { loading, users, user, repos } = this.state
   return (
     <Router>
     <div className="App">
@@ -85,7 +111,10 @@ render() {
         />
         <Route exact path='/about' component={About} />
         <Route exact path='/disclaimer' render={routeProps => <Disclaimer {...routeProps} />} />  
-        <Route exact path='/user/:login' render={routeProps => <User {...routeProps} getUser={this.getUser} user={user} loading={loading}/>} />
+        <Route exact path='/user/:login' render={routeProps => 
+        <User {...routeProps} getUser={this.getUser} getUserRepos={this.getUserRepos} repos={repos} user={user} 
+        loading={loading}/>} />
+
       </Switch>
       </div>
     </div>
