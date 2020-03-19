@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import './App.css';
 import NavBar from './components/layout/NavBar';
 import Users from './components/users/Users';
@@ -21,7 +21,7 @@ class App extends React.Component {
   }
 
   async componentDidMount() {
-    fetch(`https://api.github.com/users?client_id=
+   await fetch(`https://api.github.com/users?client_id=
     ${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=
     ${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`)
     .then(rsp => rsp.json())
@@ -90,8 +90,8 @@ class App extends React.Component {
 render() {
 
   const { loading, users, user, repos } = this.state
+
   return (
-    <Router>
     <div className="App">
       <NavBar title="GitHub" icon='fab fa-github'/>
       <div className="container">
@@ -114,12 +114,9 @@ render() {
         <Route exact path='/user/:login' render={routeProps => 
         <User {...routeProps} getUser={this.getUser} getUserRepos={this.getUserRepos} repos={repos} user={user} 
         loading={loading}/>} />
-
       </Switch>
       </div>
     </div>
-    </Router>
-    
   );
  }
 }

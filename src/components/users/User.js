@@ -20,7 +20,7 @@ class User extends React.Component {
 
 
     render() {
-        console.log(this.props.repos)
+        console.log(this.props.followers)
         const { login,
             avatar_url,
             html_url,
