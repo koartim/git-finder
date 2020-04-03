@@ -9,6 +9,8 @@ import axios from 'axios';
 import Alert from './components/layout/Alert';
 import About from './components/pages/About'
 import Disclaimer from './components/pages/Disclaimer';
+import { FETCH_USERS } from './actions';
+import { connect } from 'react-redux';
 
 class App extends React.Component {
 
@@ -25,12 +27,8 @@ class App extends React.Component {
     ${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=
     ${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`)
     .then(rsp => rsp.json())
-    .then(data => {
-      this.setState({
-        users: data,
-        loading: false
-      })
-    })
+    .then(data => this.props.fetchUsers(data))
+    this.setState({loading: false})
   }
 
   searchUsers = async text => {
@@ -50,14 +48,6 @@ class App extends React.Component {
     ${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`)
       this.setState({user: rsp.data, loading: false})
   }
-
-  // getUserRepos = async username => {
-  //   this.setState({loading: true})
-  //   const rsp = await axios.get(`https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=
-  //   ${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=
-  //   ${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`)
-  //   this.setState({repos: rsp.data, loading: false })
-  // }
 
   getUserRepos = async username => {
     this.setState({loading: true})
@@ -89,7 +79,7 @@ class App extends React.Component {
 
 render() {
 
-  const { loading, users, user, repos } = this.state
+  const { loading, user, repos } = this.state
 
   return (
     <div className="App">
@@ -102,15 +92,15 @@ render() {
             <Search 
               searchUsers={this.searchUsers} 
               clearUsers={this.clearUsers} 
-              showClear={users.length > 0 ? true : false}
+              showClear={this.props.users.length > 0 ? true : false}
               setAlert={this.setAlert}
            />
-       <Users loading= {loading} users={users} />
+       <Users loading= {loading} users={this.props.users} />
           </Fragment>
         )}
         />
         <Route exact path='/about' component={About} />
-        <Route exact path='/disclaimer' render={routeProps => <Disclaimer {...routeProps} />} />  
+        <Route exact path='/disclaimer' render={Disclaimer} />  
         <Route exact path='/user/:login' render={routeProps => 
         <User {...routeProps} getUser={this.getUser} getUserRepos={this.getUserRepos} repos={repos} user={user} 
         loading={loading}/>} />
@@ -121,4 +111,20 @@ render() {
  }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  console.log(state.users);
+  return {
+    users: state.users
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchUsers: (users) => {
+      dispatch({type: FETCH_USERS, payload: users})
+    }
+  }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
